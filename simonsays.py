@@ -1,6 +1,7 @@
 import tkinter
 import random
 import time
+import os 
 
 root = tkinter.Tk()
 
@@ -41,6 +42,7 @@ def showxy(event):
     time.sleep(0.3)
     w.update()
     default_colors()
+    beep(message, 400)
 
     root.title(message) 
 
@@ -52,6 +54,7 @@ w.tag_bind('yellow', '<Button-1>', showxy)
 colors = ['red', 'blue', 'yellow', 'green']
 positions = {'green': (0, 0, 200, 200), 'red': (200, 0, 400, 200), 'yellow': (0, 200, 200, 400), 'blue': (200, 200, 400, 400)}
 light_colors = {'yellow': '#FBFF9E', 'red': '#FF7959', 'blue': '#95B4FF', 'green': '#95FFA0'}
+beep_freq = {'yellow': '200', 'red': '300', 'blue': '400', 'green': '500'}
 seq = []
 delta_time = 1000 
 
@@ -60,6 +63,11 @@ def light_rect(color):
     light_color = light_colors[color]
     w.create_rectangle(*position_tuple, fill=light_color)
 
+def beep(color, ms):
+    freq = beep_freq[color]
+    os.system(f"beep -l {ms} -f {freq}")
+
+
 def paint_color():
     for color in seq:
         position_tuple = positions[color]
@@ -67,6 +75,7 @@ def paint_color():
         w.create_rectangle(*position_tuple, fill=light_color)
         time.sleep(0.5)
         w.update()
+        beep(color, 500)
         time.sleep(1)
         default_colors()
         w.update()
@@ -102,6 +111,7 @@ def check():
         for i in range(3):
             for color in colors:
                 light_rect(color)
+            os.system(f"beep -l 400 -f 100")
             w.update()
             time.sleep(0.5)
             default_colors()
@@ -109,7 +119,6 @@ def check():
             time.sleep(0.5)
         restart()
     root.after(1000, task)
-
 
 root.after(1000, task)
 tkinter.mainloop()
